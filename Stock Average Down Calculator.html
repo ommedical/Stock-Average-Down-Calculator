@@ -190,6 +190,13 @@
             font-size: 1.1rem;
         }
 
+        .result-item .value .percent {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: #8e99ab;
+            margin-left: 0.2rem;
+        }
+
         .btn-group {
             display: flex;
             gap: 0.8rem;
@@ -272,7 +279,7 @@
 <body>
 
 <div class="card">
-    <h1>📉 Average Down</h1>
+    <h1>📉 Stock Average Down Calculator</h1>
     <div class="subtitle">Calculate shares to buy to reach your target average (₹ INR)</div>
 
     <form id="calcForm">
@@ -384,17 +391,13 @@
         // ---- Indian number formatting ----
         function formatIndianCurrency(num) {
             if (num === undefined || num === null || isNaN(num)) return '—';
-            // Split into integer and decimal parts
             let parts = num.toFixed(2).split('.');
             let intPart = parts[0];
             let decPart = parts[1] || '00';
-            // Remove leading zeros but keep at least one digit
             intPart = intPart.replace(/^0+/, '') || '0';
-            // Indian grouping: first group of 3 from right, then groups of 2
             let lastThree = intPart.slice(-3);
             let otherDigits = intPart.slice(0, -3);
             if (otherDigits !== '') {
-                // Add commas after every 2 digits from the right
                 let formatted = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
                 lastThree = ',' + lastThree;
                 intPart = formatted + lastThree;
@@ -404,11 +407,9 @@
             return '₹' + intPart + '.' + decPart;
         }
 
-        // For integers (shares) – no decimal, but Indian commas
         function formatIndianInt(num) {
             if (num === undefined || num === null || isNaN(num)) return '—';
             let intPart = Math.floor(num).toString();
-            // Same grouping as above
             let lastThree = intPart.slice(-3);
             let otherDigits = intPart.slice(0, -3);
             if (otherDigits !== '') {
@@ -421,13 +422,11 @@
             return intPart;
         }
 
-        // For shares with fractional part (exact value) – show up to 2 decimals
         function formatIndianShares(num) {
             if (num === undefined || num === null || isNaN(num)) return '—';
             let parts = num.toFixed(2).split('.');
             let intPart = parts[0];
             let decPart = parts[1];
-            // Format integer part with Indian commas
             let lastThree = intPart.slice(-3);
             let otherDigits = intPart.slice(0, -3);
             if (otherDigits !== '') {
@@ -481,6 +480,14 @@
             const newAvgVal = totalCostNew / newTotalQtyVal;
             const additional = finalShares * price;
 
+            // Compute percentage difference from current price
+            let percentDiff = 0;
+            if (price !== 0) {
+                percentDiff = ((newAvgVal - price) / price) * 100;
+            }
+            const sign = percentDiff >= 0 ? '+' : '';
+            const percentStr = sign + percentDiff.toFixed(2) + '%';
+
             // Display results with Indian formatting
             resultArea.style.display = 'block';
 
@@ -491,7 +498,8 @@
             reqShares.textContent = displayShares;
             totalCost.textContent = formatIndianCurrency(totalCostNew);
             newTotalQty.textContent = formatIndianInt(newTotalQtyVal);
-            newAvg.textContent = formatIndianCurrency(newAvgVal);
+            // New Average with percentage
+            newAvg.innerHTML = `${formatIndianCurrency(newAvgVal)} <span class="percent">(${percentStr})</span>`;
             additionalInvest.textContent = formatIndianCurrency(additional);
         };
 
