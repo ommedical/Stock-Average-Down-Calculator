@@ -72,7 +72,7 @@ Use **Clear** to empty all fields, or **Reset** to restore the example values.
 No installation is required. The entire application is a single HTML file:
 
 ```bash
-git clone https://github.com/your-username/average-down-calculator.git
+git clone https://github.com/ommedical/Stock-Average-Down-Calculator.git
 cd average-down-calculator
 # Then open index.html in your browser
 ```
