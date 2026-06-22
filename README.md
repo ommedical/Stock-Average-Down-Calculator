@@ -73,7 +73,7 @@ No installation is required. The entire application is a single HTML file:
 
 ```bash
 git clone https://github.com/ommedical/Stock-Average-Down-Calculator.git
-cd average-down-calculator
+cd Stock-Average-Down-Calculator
 # Then open index.html in your browser
 ```
 
@@ -109,7 +109,7 @@ If you find a bug or have a suggestion, please open an issue or submit a pull re
 
 ## 📬 Feedback
 
-If you have any questions or feedback, feel free to [open an issue](https://github.com/your-username/average-down-calculator/issues) or reach out.
+If you have any questions or feedback, feel free to [open an issue](https://github.com/ommedical/Stock-Average-Down-Calculator/issues) or reach out.
 
 ---
 
