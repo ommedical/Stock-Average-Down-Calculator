@@ -1,4 +1,4 @@
-# 📉 Average Down Calculator (INR)
+# 📉 Stock Price Average Down Calculator (INR)
 
 A simple, self‑contained single‑page web application that calculates exactly how many additional shares you need to buy in order to reach your target average price. Designed for Indian investors, it displays all monetary values in **₹ (INR)** with Indian‑style comma separators (lakh, crore).
 
