@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Down Calculator (INR)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0b0e14;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: #1a1f2b;
+            border-radius: 1.5rem;
+            padding: 2rem 2.2rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2c3340;
+            transition: 0.2s;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #e8edf5;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .subtitle {
+            color: #8e99ab;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid #3b82f6;
+            padding-left: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.4rem;
+            position: relative;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #c8d0dc;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        label .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c3340;
+            color: #a0abbc;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: help;
+            transition: 0.2s;
+            border: 1px solid #3b4455;
+        }
+
+        label .tooltip-icon:hover {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+
+        .tooltip-text {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            background: #242b38;
+            color: #dce3ef;
+            padding: 0.6rem 1rem;
+            border-radius: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: 280px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            border: 1px solid #3b4455;
+            z-index: 10;
+            margin-top: 0.3rem;
+            pointer-events: none;
+        }
+
+        .form-group:hover .tooltip-text {
+            display: block;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: #10141d;
+            border: 1px solid #2c3340;
+            border-radius: 0.75rem;
+            color: #e8edf5;
+            font-size: 1rem;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        input[type="number"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        input[type="number"]:hover {
+            border-color: #4a5568;
+        }
+
+        /* hide spinners */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0.5rem 0 1.2rem 0;
+            color: #c8d0dc;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        .result-area {
+            background: #10141d;
+            border-radius: 0.75rem;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0 1.8rem 0;
+            border: 1px solid #2c3340;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #1f2633;
+            color: #bcc6d6;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item .label {
+            font-weight: 400;
+        }
+
+        .result-item .value {
+            font-weight: 600;
+            color: #e8edf5;
+        }
+
+        .result-item .value.highlight {
+            color: #60a5fa;
+            font-size: 1.1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 90px;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #2c3340;
+            color: #c8d0dc;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #2c3340;
+            color: #c8d0dc;
+        }
+
+        .btn-secondary:hover {
+            background: #3b4455;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #5a6578;
+            font-size: 0.75rem;
+            border-top: 1px solid #1f2633;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>📉 Average Down</h1>
+    <div class="subtitle">Calculate shares to buy to reach your target average (₹ INR)</div>
+
+    <form id="calcForm">
+        <!-- Current Shares -->
+        <div class="form-group">
+            <label>
+                Current Shares
+                <span class="tooltip-icon" aria-label="Tooltip">?</span>
+                <span class="tooltip-text">Number of shares you currently hold.</span>
+            </label>
+            <input type="number" id="currentQty" step="1" min="0" value="1000" required>
+        </div>
+
+        <!-- Current Average Price -->
+        <div class="form-group">
+            <label>
+                Current Avg Price (₹)
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Your average cost per share (purchase price) in INR.</span>
+            </label>
+            <input type="number" id="currentAvg" step="any" min="0" value="873.78" required>
+        </div>
+
+        <!-- Current Market Price -->
+        <div class="form-group">
+            <label>
+                Current Market Price (₹)
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">The current trading price per share in INR.</span>
+            </label>
+            <input type="number" id="currentPrice" step="any" min="0" value="544.35" required>
+        </div>
+
+        <!-- Target Average -->
+        <div class="form-group">
+            <label>
+                Target Average (₹)
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">The desired average price you want to achieve in INR.</span>
+            </label>
+            <input type="number" id="targetAvg" step="any" min="0" value="620" required>
+        </div>
+
+        <!-- Round up checkbox -->
+        <div class="checkbox-group">
+            <input type="checkbox" id="roundCheck" checked>
+            <label for="roundCheck" style="margin-bottom:0; cursor:pointer;">
+                Round up to whole share
+            </label>
+            <span class="tooltip-icon" style="margin-left:auto;">?</span>
+            <span class="tooltip-text" style="left:auto; right:0; max-width:220px;">If checked, required shares are rounded up (ceil) to the next integer. Uncheck to see exact fractional value.</span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="calcBtn">Calculate</button>
+            <button type="button" class="btn btn-secondary" id="clearBtn">Clear</button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+        </div>
+    </form>
+
+    <!-- Results -->
+    <div id="resultArea" class="result-area" style="display:none;">
+        <div class="result-item">
+            <span class="label">📦 Required Shares</span>
+            <span class="value highlight" id="reqShares">—</span>
+        </div>
+        <div class="result-item">
+            <span class="label">💰 Total Cost (new)</span>
+            <span class="value" id="totalCost">—</span>
+        </div>
+        <div class="result-item">
+            <span class="label">📊 New Total Shares</span>
+            <span class="value" id="newTotalQty">—</span>
+        </div>
+        <div class="result-item">
+            <span class="label">🎯 New Average</span>
+            <span class="value" id="newAvg">—</span>
+        </div>
+        <div class="result-item">
+            <span class="label">📈 Additional Investment</span>
+            <span class="value" id="additionalInvest">—</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        All values are for informational purposes. Always verify with your broker.
+    </div>
+</div>
+
+<script>
+    (function() {
+        // DOM elements
+        const currentQty = document.getElementById('currentQty');
+        const currentAvg = document.getElementById('currentAvg');
+        const currentPrice = document.getElementById('currentPrice');
+        const targetAvg = document.getElementById('targetAvg');
+        const roundCheck = document.getElementById('roundCheck');
+        const calcBtn = document.getElementById('calcBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultArea = document.getElementById('resultArea');
+        const reqShares = document.getElementById('reqShares');
+        const totalCost = document.getElementById('totalCost');
+        const newTotalQty = document.getElementById('newTotalQty');
+        const newAvg = document.getElementById('newAvg');
+        const additionalInvest = document.getElementById('additionalInvest');
+
+        // ---- Indian number formatting ----
+        function formatIndianCurrency(num) {
+            if (num === undefined || num === null || isNaN(num)) return '—';
+            // Split into integer and decimal parts
+            let parts = num.toFixed(2).split('.');
+            let intPart = parts[0];
+            let decPart = parts[1] || '00';
+            // Remove leading zeros but keep at least one digit
+            intPart = intPart.replace(/^0+/, '') || '0';
+            // Indian grouping: first group of 3 from right, then groups of 2
+            let lastThree = intPart.slice(-3);
+            let otherDigits = intPart.slice(0, -3);
+            if (otherDigits !== '') {
+                // Add commas after every 2 digits from the right
+                let formatted = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+                lastThree = ',' + lastThree;
+                intPart = formatted + lastThree;
+            } else {
+                intPart = lastThree;
+            }
+            return '₹' + intPart + '.' + decPart;
+        }
+
+        // For integers (shares) – no decimal, but Indian commas
+        function formatIndianInt(num) {
+            if (num === undefined || num === null || isNaN(num)) return '—';
+            let intPart = Math.floor(num).toString();
+            // Same grouping as above
+            let lastThree = intPart.slice(-3);
+            let otherDigits = intPart.slice(0, -3);
+            if (otherDigits !== '') {
+                let formatted = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+                lastThree = ',' + lastThree;
+                intPart = formatted + lastThree;
+            } else {
+                intPart = lastThree;
+            }
+            return intPart;
+        }
+
+        // For shares with fractional part (exact value) – show up to 2 decimals
+        function formatIndianShares(num) {
+            if (num === undefined || num === null || isNaN(num)) return '—';
+            let parts = num.toFixed(2).split('.');
+            let intPart = parts[0];
+            let decPart = parts[1];
+            // Format integer part with Indian commas
+            let lastThree = intPart.slice(-3);
+            let otherDigits = intPart.slice(0, -3);
+            if (otherDigits !== '') {
+                let formatted = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+                lastThree = ',' + lastThree;
+                intPart = formatted + lastThree;
+            } else {
+                intPart = lastThree;
+            }
+            return intPart + '.' + decPart;
+        }
+
+        // ---- Compute logic ----
+        const compute = () => {
+            const qty = parseFloat(currentQty.value);
+            const avg = parseFloat(currentAvg.value);
+            const price = parseFloat(currentPrice.value);
+            const target = parseFloat(targetAvg.value);
+            const roundUp = roundCheck.checked;
+
+            if (isNaN(qty) || qty < 0) { alert('Please enter a valid positive number for Current Shares.'); return; }
+            if (isNaN(avg) || avg < 0) { alert('Please enter a valid positive number for Current Avg Price.'); return; }
+            if (isNaN(price) || price < 0) { alert('Please enter a valid positive number for Current Market Price.'); return; }
+            if (isNaN(target) || target < 0) { alert('Please enter a valid positive number for Target Average.'); return; }
+
+            if (price === target) {
+                if (avg === target) {
+                    alert('Your average is already at the target. No shares needed.');
+                    return;
+                } else {
+                    alert('Cannot change average because current price equals target. Buying at target price will not change the average.');
+                    return;
+                }
+            }
+
+            let sharesExact = qty * (target - avg) / (price - target);
+
+            if (sharesExact < 0) {
+                alert('Target average is not achievable by buying more shares. You would need to sell shares to increase average.\n\nHint: For buying, target must be between current price and average (if average > price) or between price and average (if average < price).');
+                return;
+            }
+
+            let finalShares = sharesExact;
+            if (roundUp) {
+                finalShares = Math.ceil(sharesExact);
+            }
+
+            const totalCostExisting = qty * avg;
+            const totalCostNew = totalCostExisting + finalShares * price;
+            const newTotalQtyVal = qty + finalShares;
+            const newAvgVal = totalCostNew / newTotalQtyVal;
+            const additional = finalShares * price;
+
+            // Display results with Indian formatting
+            resultArea.style.display = 'block';
+
+            let displayShares = formatIndianInt(finalShares);
+            if (roundUp && sharesExact !== finalShares) {
+                displayShares += ` (exact: ${formatIndianShares(sharesExact)})`;
+            }
+            reqShares.textContent = displayShares;
+            totalCost.textContent = formatIndianCurrency(totalCostNew);
+            newTotalQty.textContent = formatIndianInt(newTotalQtyVal);
+            newAvg.textContent = formatIndianCurrency(newAvgVal);
+            additionalInvest.textContent = formatIndianCurrency(additional);
+        };
+
+        const clearAll = () => {
+            currentQty.value = '';
+            currentAvg.value = '';
+            currentPrice.value = '';
+            targetAvg.value = '';
+            roundCheck.checked = true;
+            resultArea.style.display = 'none';
+        };
+
+        const resetDefaults = () => {
+            currentQty.value = '1000';
+            currentAvg.value = '873.78';
+            currentPrice.value = '544.35';
+            targetAvg.value = '620';
+            roundCheck.checked = true;
+            resultArea.style.display = 'none';
+        };
+
+        calcBtn.addEventListener('click', compute);
+        clearBtn.addEventListener('click', clearAll);
+        resetBtn.addEventListener('click', resetDefaults);
+
+        document.getElementById('calcForm').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                compute();
+            }
+        });
+
+        window.addEventListener('load', compute);
+    })();
+</script>
+
+</body>
+</html>
